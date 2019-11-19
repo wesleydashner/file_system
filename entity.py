@@ -7,7 +7,7 @@ class Entity:
 
     # raises PathNotFound
     def delete(self):
-        self.parent.remove_child(self)
+        self.parent.remove_child(self.name)
 
     def get_size(self):
         print('ERROR: get_size in Entity called')

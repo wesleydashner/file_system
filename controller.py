@@ -37,6 +37,8 @@ class Controller:
 
     # raises PathNotFound, IllegalFileSystemOperation, PathAlreadyExists
     def create(self, entity_type, name, parent_path):
+        if entity_type != Drive and not parent_path:
+            raise IllegalFileSystemOperation('only drives can be at the root level')
         if entity_type == Drive and not parent_path:
             self.add_drive(Drive(name))
             return
@@ -57,6 +59,7 @@ class Controller:
 
     # raises PathNotFound, IllegalFileSystemOperation, PathAlreadyExists
     def move(self, source_path, destination_path):
+        original_destination_path = destination_path
         destination_path = destination_path.split('\\')
         destination_name = destination_path[-1]
         destination_path = destination_path[:len(destination_path) - 1]
@@ -64,7 +67,7 @@ class Controller:
         if type(destination_parent) == Text:
             raise IllegalFileSystemOperation('parent cannot be a text file')
         try:
-            self.get_entity(destination_path)
+            self.get_entity(original_destination_path)
             raise PathAlreadyExists
         except PathNotFound:
             entity = self.get_entity(source_path)
