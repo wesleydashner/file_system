@@ -11,8 +11,6 @@ class Controller:
     def add_drive(self, drive):
         if type(drive) == Drive:
             self.drives.append(drive)
-            return True
-        return False
 
     # raises PathNotFound
     def get_entity(self, path):
@@ -75,9 +73,9 @@ class Controller:
             entity.name = destination_name
             destination_parent.add_child(entity)
 
-    # raises PathNotFound, IllegalFileSystemOperation
+    # raises PathNotFound, NotATextFile
     def write_to_file(self, path, content):
         entity = self.get_entity(path)
         if type(entity) != Text:
-            raise IllegalFileSystemOperation
+            raise NotATextFile
         entity.content = content
