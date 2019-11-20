@@ -15,6 +15,7 @@ class Controller:
     # raises PathNotFound
     def get_entity(self, path):
         path = path.split('\\')
+        # find drive
         drive_found = False
         for drive in self.drives:
             if drive.name == path[0]:
@@ -22,6 +23,7 @@ class Controller:
                 drive_found = True
         if not drive_found:
             raise PathNotFound()
+        # go through path to find entity
         for item_name in path[1:]:
             found = False
             for sub_item in entity.contents:
@@ -37,6 +39,7 @@ class Controller:
     def create(self, entity_type, name, parent_path):
         if entity_type != Drive and not parent_path:
             raise IllegalFileSystemOperation('only drives can be at the root level')
+        # if a drive is being created
         if entity_type == Drive and not parent_path:
             self.add_drive(Drive(name))
             return
@@ -45,6 +48,7 @@ class Controller:
             raise IllegalFileSystemOperation('parent cannot be a text file')
         if entity_type == Drive and parent_path:
             raise IllegalFileSystemOperation('drive cannot have a parent')
+        # if PathNotFound, we know that the path is available
         try:
             self.get_entity(parent_path + '\\' + name)
             raise PathAlreadyExists
@@ -64,6 +68,7 @@ class Controller:
         destination_parent = self.get_entity('\\'.join(destination_path))
         if type(destination_parent) == Text:
             raise IllegalFileSystemOperation('parent cannot be a text file')
+        # if PathNotFound, we know that the path is available
         try:
             self.get_entity(original_destination_path)
             raise PathAlreadyExists
